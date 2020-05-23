@@ -22,6 +22,7 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
     TextView cusSocial;
     TextView cusPhone;
     TextView cusAddress;
+    TextView message;
 
     //Attributes to create customer object
     String name;
@@ -47,6 +48,7 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
         cusSocial = (TextView) findViewById(R.id.socialTextView);
         cusPhone = (TextView) findViewById(R.id.phoneTextView);
         cusAddress = (TextView) findViewById(R.id.addressTextView);
+        message = (TextView) findViewById(R.id.msgTextView);
 
         //Retrieve from shared pref
         name = sharedPreferences.getString("custName", "default");
@@ -56,27 +58,29 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
         phoneNum = String.valueOf(sharedPreferences.getLong("custPhoneNum", 0));
 
         //Set Text Views
-        cusName.setText("Name: \n\n" + name);
-        cusEmail.setText("Email Address: \n\n" + email);
-        cusSocial.setText("Social Security: \n\n***-**-" + social.substring(social.length() - 4, social.length()));
-        cusPhone.setText("Phone Number: \n\n(" + phoneNum.substring(0, 3) + ")" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(phoneNum.length() - 4, phoneNum.length()));
-        cusAddress.setText("Address: \n\n" + address);
+        cusName.setText(name);
+        cusEmail.setText(email);
+        cusSocial.setText("***-**-" + social.substring(social.length() - 4, social.length()));
+        cusPhone.setText("(" + phoneNum.substring(0, 3) + ")" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(phoneNum.length() - 4, phoneNum.length()));
+        cusAddress.setText(address);
 
 
     }
 
-//    public void createAccount(View view) {
-//        //Customers(String name, String email, String customerId, int pin, String sqAnswer, String address, long phoneNum, long socialSecurity)
-//        try{
-//            Customers newCustomer = new Customers(name, email, address, phoneNum, social);
-//
-//            if(firebaseHelper.addNewCustomer(newCustomer) == true)
-//                Toast.makeText(this, "Customer Successfully Created", Toast.LENGTH_SHORT).show();
-//            else
-//                Toast.makeText(this, "Customer Already Exists", Toast.LENGTH_SHORT).show();
-//        }
-//        catch (Exception e) {
-//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    public void createAccount(View view) {
+        //Customers(String name, String email, String customerId, int pin, String sqAnswer, String address, long phoneNum, long socialSecurity)
+        try{
+            Customers newCustomer = new Customers(name, email, address, Long.decode(phoneNum), Long.decode(social));
+
+            if(firebaseHelper.addNewCustomer(newCustomer) == true)
+                message.setText("Customer Profile Successfully Created");
+            else
+                message.setText("Customer Profile Not Created");
+
+            message.setVisibility(View.VISIBLE);
+        }
+        catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 }
