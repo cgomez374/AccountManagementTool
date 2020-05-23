@@ -106,8 +106,13 @@ public class FirebaseHelper {
         boolean customerExist = false;
 
         for(int i = 0; i < customerList.size(); i++) {
-            if(customer.getSocial() == customerList.get(i).getSocial())
+            if(customer.getSocial() == customerList.get(i).getSocial()) {
                 customerExist = true;
+                System.out.println("Customer already exists");
+            }
+            else
+                System.out.println("Customer does not exists!");
+
         }
 
         return customerExist;

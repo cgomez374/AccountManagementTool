@@ -3,8 +3,10 @@ package com.example.accountmanagement;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,11 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
     String address;
     String social;
     String phoneNum;
+
+    //Buttons active?
+    Button creditBtn;
+    Button saveBtn;
+    Button shopBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,29 +65,64 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
         phoneNum = String.valueOf(sharedPreferences.getLong("custPhoneNum", 0));
 
         //Set Text Views
-        cusName.setText(name);
-        cusEmail.setText(email);
-        cusSocial.setText("***-**-" + social.substring(social.length() - 4, social.length()));
-        cusPhone.setText("(" + phoneNum.substring(0, 3) + ")" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(phoneNum.length() - 4, phoneNum.length()));
-        cusAddress.setText(address);
+        cusName.setText("Name:\n" + name);
+        cusEmail.setText("Email:\n" + email);
+        cusSocial.setText("Social Security:\n***-**-" + social.substring(social.length() - 4, social.length()));
+        cusPhone.setText("Phone Number:\n(" + phoneNum.substring(0, 3) + ")" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(phoneNum.length() - 4, phoneNum.length()));
+        cusAddress.setText("Address:\n" + address);
+
+        //Buttons active?
+        creditBtn = findViewById(R.id.creditCheckButton);
+        saveBtn = findViewById(R.id.saveAccountButton);
+        shopBtn = findViewById(R.id.shopButton);
+
+        saveBtn.setClickable(false);
+        shopBtn.setClickable(false);
 
 
     }
 
-    public void createAccount(View view) {
+    public void runCreditCheck(View view) {
         //Customers(String name, String email, String customerId, int pin, String sqAnswer, String address, long phoneNum, long socialSecurity)
         try{
             Customers newCustomer = new Customers(name, email, address, Long.decode(phoneNum), Long.decode(social));
 
-            if(firebaseHelper.addNewCustomer(newCustomer) == true)
+            if(firebaseHelper.addNewCustomer(newCustomer) == true) {
                 message.setText("Customer Profile Successfully Created");
-            else
-                message.setText("Customer Profile Not Created");
+                message.setTextColor(Color.parseColor("#00FF00"));
 
-            message.setVisibility(View.VISIBLE);
+                //Set buttons to clickable in order to continue
+                if(saveBtn.isClickable() == false && shopBtn.isClickable() == false)
+                    saveBtn.setClickable(true);
+            }
+            else {
+                message.setText("Customer Exists Already");
+                message.setTextColor(Color.parseColor("#ff0000"));
+            }
+
         }
         catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Method will assign the customer profile to a new account object
+    public void saveButton(View view) {
+        if(saveBtn.isClickable() == false)
+            Toast.makeText(this, "Complete Credit Check First", Toast.LENGTH_SHORT).show();
+        else {
+            shopBtn.setClickable(true);
+
+        }
+    }
+
+    //Method will make sure account is saved first and then start shopping activity
+    public void shopButton(View view) {
+        if(shopBtn.isClickable() == false)
+            Toast.makeText(this, "Save Account First", Toast.LENGTH_SHORT).show();
+        else if(saveBtn.isClickable() == true) {
+            Toast.makeText(this, "Start Shopping", Toast.LENGTH_SHORT).show();
+
         }
     }
 }
