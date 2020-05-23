@@ -18,6 +18,8 @@ public class FirebaseHelper {
 
     final ArrayList<Users> userList = new ArrayList<Users>();
 
+    ArrayList<Customers> customerList = new ArrayList<Customers>();
+
     //Firebase Database variable
     FirebaseDatabase fireDB;
 
@@ -52,19 +54,36 @@ public class FirebaseHelper {
 
     public boolean addNewUser(Users userToAdd) {
         DatabaseReference fireRef = fireDB.getReference("Users");
+
         //Check to see if User exists
         if(doesUserExist(userToAdd)) {
             return false;
         }
         else {
-            //Add new user, the user id will be the key to find each user
-            //fireRef.push().setValue(userToAdd);
-            //fireRef.child("userId").setValue(userToAdd.userId);
             fireRef.child(userToAdd.userId).child("email").setValue(userToAdd.email);
             fireRef.child(userToAdd.userId).child("name").setValue(userToAdd.name);
             fireRef.child(userToAdd.userId).child("password").setValue(userToAdd.password);
             fireRef.child(userToAdd.userId).child("phoneNumber").setValue(userToAdd.phoneNumber);
             fireRef.child(userToAdd.userId).child("numberOfLoginSessions").setValue(userToAdd.numberOfLoginSessions);
+        }
+
+        return true;
+    }
+
+    public boolean addNewCustomer(Customers customer) {
+        DatabaseReference fireRef = fireDB.getReference("Customers");
+
+        //Check to see if User exists
+        if(doesCustomerExist(customer)) {
+            return false;
+        }
+        else {
+            fireRef.child(customer.getCustomerId()).child("Name").setValue(customer.getName());
+            fireRef.child(customer.getCustomerId()).child("Email").setValue(customer.getEmail());
+            fireRef.child(customer.getCustomerId()).child("Social Security").setValue(customer.getSocial());
+            fireRef.child(customer.getCustomerId()).child("Address").setValue(customer.getAddress());
+            fireRef.child(customer.getCustomerId()).child("Phone Number").setValue(customer.getPhoneNum());
+
         }
 
         return true;
@@ -80,6 +99,18 @@ public class FirebaseHelper {
         }
 
         return userExist;
+    }
+
+    public boolean doesCustomerExist(Customers customer) {
+
+        boolean customerExist = false;
+
+        for(int i = 0; i < customerList.size(); i++) {
+            if(customer.getSocial() == customerList.get(i).getSocial())
+                customerExist = true;
+        }
+
+        return customerExist;
     }
 
 
@@ -131,6 +162,47 @@ public class FirebaseHelper {
 
             }
         });
+
+    }
+
+    public void retrieveAllCustomers() {
+
+        DatabaseReference fireRef = fireDB.getReference("Customers");
+
+        try {
+            fireRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (customerList.isEmpty() == false) {
+                        customerList.clear();
+                    } else {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            if (data.hasChild("Name") && data.hasChild("Email") && data.hasChild("Social Security") && data.hasChild("Phone Number") && data.hasChild("Address")) {
+                                String name = data.child("Name").getValue().toString();
+                                String email = data.child("Email").getValue().toString();
+                                String customerId = data.getKey();
+                                long social = Long.decode(data.child("Social Security").getValue().toString());
+                                Long ptnNum = Long.decode(data.child("Phone Number").getValue().toString());
+                                String address = data.child("Address").getValue().toString();
+
+                                //Customers(String name, String email, String address, long phoneNum, long socialSecurity, String customerId)
+                                Customers customer = new Customers(name, email, address, ptnNum, social, customerId);
+                                customerList.add(customer);
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        catch (Exception e) {
+            System.out.println("From retrieve customer list "  +  e.getMessage());
+        }
 
     }
 

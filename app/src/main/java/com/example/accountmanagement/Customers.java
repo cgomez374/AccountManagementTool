@@ -6,8 +6,6 @@ public class Customers {
     private String name;
     private String email;
     private String customerId;
-    private int pin;
-    private String sqAnswer;
     private String address;
     private long phoneNum;
     private long socialSecurity;
@@ -16,14 +14,73 @@ public class Customers {
     public Customers() {
     }
 
-    public Customers(String name, String email, String customerId, int pin, String sqAnswer, String address, long phoneNum, long socialSecurity) {
+    //New customer constructor will assign ID and set other attributes
+    public Customers(String name, String email, String address, long phoneNum, long socialSecurity) {
         this.name = name;
         this.email = email;
-        this.customerId = customerId;
-        this.pin = pin;
-        this.sqAnswer = sqAnswer;
         this.address = address;
         this.phoneNum = phoneNum;
         this.socialSecurity = socialSecurity;
+
+        //Implement auto customer id
+        customerId = CreateCustomerId();
+
+    }
+
+    //This constructor will be used for existing customers that already have an id
+    public Customers(String name, String email, String address, long phoneNum, long socialSecurity, String customerId) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.phoneNum = phoneNum;
+        this.socialSecurity = socialSecurity;
+        this.customerId = customerId;
+
+    }
+
+    private String CreateCustomerId(){
+        //User id will have to minimum 8 characters made up of numbers and letter
+        // index one and two will be letters and the rest will be numbers
+
+        //empty string
+        String customerId = "";
+
+        //generate random numbers from 1 -9, add to user ID
+        // define the range
+        int max = 9;
+        int min = 1;
+        int range = max - min + 1;
+
+        for (int k = 0; k < 9; k++) {
+            int rand = (int) (Math.random() * range) + min;
+            customerId += rand;
+        }
+
+        //return
+        return customerId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public long getPhoneNum() {
+        return phoneNum;
+    }
+
+    public long getSocial() {
+        return socialSecurity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }
