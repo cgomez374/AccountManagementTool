@@ -2,6 +2,7 @@ package com.example.accountmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -92,8 +93,12 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
                 message.setTextColor(Color.parseColor("#00FF00"));
 
                 //Set buttons to clickable in order to continue
-                if(saveBtn.isClickable() == false && shopBtn.isClickable() == false)
+                if(saveBtn.isClickable() == false && shopBtn.isClickable() == false) {
                     saveBtn.setClickable(true);
+                    shopBtn.setClickable(true);
+                }
+
+
             }
             else {
                 message.setText("Customer Exists Already");
@@ -108,10 +113,12 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
 
     //Method will assign the customer profile to a new account object
     public void saveButton(View view) {
-        if(saveBtn.isClickable() == false)
+        if(saveBtn.isClickable() == false) {
             Toast.makeText(this, "Complete Credit Check First", Toast.LENGTH_SHORT).show();
+        }
         else {
-            shopBtn.setClickable(true);
+            Intent intent = new Intent(this, finalizeNewAccount.class);
+            startActivity(intent);
 
         }
     }
