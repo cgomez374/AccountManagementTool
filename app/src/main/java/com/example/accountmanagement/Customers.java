@@ -38,6 +38,15 @@ public class Customers {
 
     }
 
+    public void setCustomer(Customers customer) {
+        this.name = customer.name;
+        this.email = customer.email;
+        this.address = customer.address;
+        this.phoneNum = customer.phoneNum;
+        this.socialSecurity = customer.socialSecurity;
+        this.customerId = customer.customerId;
+    }
+
     private String CreateCustomerId(){
         //User id will have to minimum 8 characters made up of numbers and letter
         // index one and two will be letters and the rest will be numbers

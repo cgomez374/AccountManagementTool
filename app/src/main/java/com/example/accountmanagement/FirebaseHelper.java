@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 
 public class FirebaseHelper {
 
+    //List of Users, Customers, and Accounts
     final ArrayList<Users> userList = new ArrayList<Users>();
 
     ArrayList<Customers> customerList = new ArrayList<Customers>();
@@ -49,6 +50,18 @@ public class FirebaseHelper {
         }
 
         return null;
+    }
+
+    public Customers getCustomer(long social) {
+
+        for(int i = 0; i < customerList.size(); i++) {
+
+            if(customerList.get(i).getSocial() == social)
+                return customerList.get(i);
+        }
+
+        return null;
+
     }
 
 
@@ -88,6 +101,33 @@ public class FirebaseHelper {
 
         return true;
     }
+
+    public boolean addNewAccount(Accounts account) {
+        DatabaseReference fireRef = fireDB.getReference("Accounts");
+
+        //Grab customer
+        Customers customer = new Customers();
+        customer.setCustomer(account.getCustomer());
+
+//        //Check to see if User exists
+//        if(doesCustomerExist(customer)) {
+//            return false;
+//        }
+//        else {
+            fireRef.child(account.getId()).child("Customer Name").setValue(customer.getName());
+            fireRef.child(account.getId()).child("Customer Email").setValue(customer.getEmail());
+            fireRef.child(account.getId()).child("Customer Social Security").setValue(customer.getSocial());
+            fireRef.child(account.getId()).child("Customer Address").setValue(customer.getAddress());
+            fireRef.child(account.getId()).child("Security Question").setValue(account.getSecurityQuestion());
+            fireRef.child(account.getId()).child("Security Question Answer").setValue(account.getSecQuestAnswer());
+            fireRef.child(account.getId()).child("Pin Number").setValue(account.getPin());
+
+        //}
+
+        return true;
+    }
+
+
 
     public boolean doesUserExist(Users user) {
 
