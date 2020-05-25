@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Account Management</string>
+    <string-array name="security_questions">
+        <item>What is your first pets name?</item>
+        <item>Who is your best friend from your childhood?</item>
+        <item>What is the street you grew up on?</item>
+    </string-array>
 </resources>
