@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".LinesToActivate">
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="250dp"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="250dp"
+        android:layout_marginRight="250dp"
+        android:gravity="center"
+        android:text="Lines to Activate"
+        android:textColor="#FF5722"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="1278dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="333dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,18 +9,20 @@ public class Customers {
     private String address;
     private long phoneNum;
     private long socialSecurity;
+    private int approvedLines;
 
     //Constructors
     public Customers() {
     }
 
     //New customer constructor will assign ID and set other attributes
-    public Customers(String name, String email, String address, long phoneNum, long socialSecurity) {
+    public Customers(String name, String email, String address, long phoneNum, long socialSecurity, int approvedLines) {
         this.name = name;
         this.email = email;
         this.address = address;
         this.phoneNum = phoneNum;
         this.socialSecurity = socialSecurity;
+        this.approvedLines = approvedLines;
 
         //Implement auto customer id
         customerId = CreateCustomerId();
@@ -28,13 +30,14 @@ public class Customers {
     }
 
     //This constructor will be used for existing customers that already have an id
-    public Customers(String name, String email, String address, long phoneNum, long socialSecurity, String customerId) {
+    public Customers(String name, String email, String address, long phoneNum, long socialSecurity, String customerId, int approvedLines) {
         this.name = name;
         this.email = email;
         this.address = address;
         this.phoneNum = phoneNum;
         this.socialSecurity = socialSecurity;
         this.customerId = customerId;
+        this.approvedLines = approvedLines;
 
     }
 
@@ -45,6 +48,7 @@ public class Customers {
         this.phoneNum = customer.phoneNum;
         this.socialSecurity = customer.socialSecurity;
         this.customerId = customer.customerId;
+        this.approvedLines = customer.approvedLines;
     }
 
     private String CreateCustomerId(){
@@ -91,5 +95,9 @@ public class Customers {
 
     public String getAddress() {
         return address;
+    }
+
+    public int getApprovedLines() {
+        return approvedLines;
     }
 }

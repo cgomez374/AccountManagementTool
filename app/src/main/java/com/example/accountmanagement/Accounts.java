@@ -8,6 +8,7 @@ public class Accounts {
     private String secQuestAnswer;
     private long pin;
     private String accountId;
+    private boolean accountStatus = false;
 
     public Accounts() {
     }
@@ -18,6 +19,7 @@ public class Accounts {
         this.secQuestAnswer = secQuestAnswer;
         this.pin = pin;
         this.accountId = createAccountId();
+        this.accountStatus = true;
     }
 
     public String getId() {
@@ -36,6 +38,10 @@ public class Accounts {
 
     public long getPin() {
         return pin;
+    }
+
+    public boolean getStatus() {
+        return accountStatus;
     }
 
     private String createAccountId(){

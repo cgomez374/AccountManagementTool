@@ -33,6 +33,7 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
     String address;
     String social;
     String phoneNum;
+    int approvedLines;
 
     //Buttons active?
     Button creditBtn;
@@ -86,10 +87,12 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
     public void runCreditCheck(View view) {
         //Customers(String name, String email, String customerId, int pin, String sqAnswer, String address, long phoneNum, long socialSecurity)
         try{
-            Customers newCustomer = new Customers(name, email, address, Long.decode(phoneNum), Long.decode(social));
+            //Default on approved lines will be five, lines in reality depends on credit
+            approvedLines = 5;
+            Customers newCustomer = new Customers(name, email, address, Long.decode(phoneNum), Long.decode(social), approvedLines);
 
             if(firebaseHelper.addNewCustomer(newCustomer) == true) {
-                message.setText("Customer Profile Successfully Created");
+                message.setText("Customer Approved for " + approvedLines + " lines!");
                 message.setTextColor(Color.parseColor("#00FF00"));
 
                 //Set buttons to clickable in order to continue
@@ -101,7 +104,7 @@ public class ConfirmNewCustomerInfo extends AppCompatActivity {
 
             }
             else {
-                message.setText("Customer Exists Already");
+                message.setText("Customer Not Approved");
                 message.setTextColor(Color.parseColor("#ff0000"));
             }
 

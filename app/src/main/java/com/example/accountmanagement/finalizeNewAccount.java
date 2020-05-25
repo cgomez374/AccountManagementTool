@@ -2,6 +2,7 @@ package com.example.accountmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -65,6 +66,10 @@ public class finalizeNewAccount extends AppCompatActivity {
 
         if(pin.getText().toString().isEmpty())
             pin.setError("Cannot Be Empty");
+        else if(pin.getText().toString().length() < 6)
+            pin.setError("Too Short");
+        else if(pin.getText().toString().length() > 10)
+            pin.setError("Too Long");
         else if(pinConfirm.getText().toString().isEmpty())
             pinConfirm.setError("Cannot Be Empty");
         else if(!pin.getText().toString().equals(pinConfirm.getText().toString()))
@@ -91,9 +96,14 @@ public class finalizeNewAccount extends AppCompatActivity {
             Accounts newAccount = new Accounts(customer, securityQuestionSelected, sqAnswer.getText().toString(), Long.decode(pin.getText().toString()));
 
             //Upload to firebase
-            firebaseHelper.addNewAccount(newAccount);
+            if(firebaseHelper.addNewAccount(newAccount) == true){
+                //redirect to shop activity
+                Intent intent = new Intent(this, LinesToActivate.class);
+                startActivity(intent);
 
-            //redirect to shop activity
+            }
+
+
         }
 
     }

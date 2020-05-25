@@ -55,7 +55,6 @@ public class FirebaseHelper {
     public Customers getCustomer(long social) {
 
         for(int i = 0; i < customerList.size(); i++) {
-
             if(customerList.get(i).getSocial() == social)
                 return customerList.get(i);
         }
@@ -84,47 +83,60 @@ public class FirebaseHelper {
     }
 
     public boolean addNewCustomer(Customers customer) {
-        DatabaseReference fireRef = fireDB.getReference("Customers");
+        try {
+            DatabaseReference fireRef = fireDB.getReference("Customers");
 
-        //Check to see if User exists
-        if(doesCustomerExist(customer)) {
+            //Check to see if User exists
+            if(doesCustomerExist(customer)) {
+                return false;
+            }
+            else {
+                fireRef.child(customer.getCustomerId()).child("Name").setValue(customer.getName());
+                fireRef.child(customer.getCustomerId()).child("Email").setValue(customer.getEmail());
+                fireRef.child(customer.getCustomerId()).child("Social Security").setValue(customer.getSocial());
+                fireRef.child(customer.getCustomerId()).child("Address").setValue(customer.getAddress());
+                fireRef.child(customer.getCustomerId()).child("Phone Number").setValue(customer.getPhoneNum());
+                fireRef.child(customer.getCustomerId()).child("Approved Lines").setValue(customer.getApprovedLines());
+
+            }
+
+            return true;
+        }
+        catch(Exception e) {
+            System.out.println("Error from add new customer " + e.getMessage());
             return false;
         }
-        else {
-            fireRef.child(customer.getCustomerId()).child("Name").setValue(customer.getName());
-            fireRef.child(customer.getCustomerId()).child("Email").setValue(customer.getEmail());
-            fireRef.child(customer.getCustomerId()).child("Social Security").setValue(customer.getSocial());
-            fireRef.child(customer.getCustomerId()).child("Address").setValue(customer.getAddress());
-            fireRef.child(customer.getCustomerId()).child("Phone Number").setValue(customer.getPhoneNum());
 
-        }
 
-        return true;
     }
 
     public boolean addNewAccount(Accounts account) {
-        DatabaseReference fireRef = fireDB.getReference("Accounts");
+        try {
+            //Create path
+            DatabaseReference fireRef = fireDB.getReference("Accounts");
 
-        //Grab customer
-        Customers customer = new Customers();
-        customer.setCustomer(account.getCustomer());
+            //Grab customer
+            Customers customer = new Customers();
+            customer.setCustomer(account.getCustomer());
 
-//        //Check to see if User exists
-//        if(doesCustomerExist(customer)) {
-//            return false;
-//        }
-//        else {
+            //Upload attributes to firebase
             fireRef.child(account.getId()).child("Customer Name").setValue(customer.getName());
             fireRef.child(account.getId()).child("Customer Email").setValue(customer.getEmail());
             fireRef.child(account.getId()).child("Customer Social Security").setValue(customer.getSocial());
             fireRef.child(account.getId()).child("Customer Address").setValue(customer.getAddress());
+            fireRef.child(account.getId()).child("Approved Lines").setValue(customer.getApprovedLines());
             fireRef.child(account.getId()).child("Security Question").setValue(account.getSecurityQuestion());
             fireRef.child(account.getId()).child("Security Question Answer").setValue(account.getSecQuestAnswer());
-            fireRef.child(account.getId()).child("Pin Number").setValue(account.getPin());
+            fireRef.child(account.getId()).child("Active Status").setValue(account.getStatus());
 
-        //}
+            return true;
 
-        return true;
+
+        }
+        catch(Exception e) {
+            System.out.println("Error from addNewAcocunt " + e.getMessage());
+            return false;
+        }
     }
 
 
@@ -222,16 +234,19 @@ public class FirebaseHelper {
                         customerList.clear();
                     } else {
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            if (data.hasChild("Name") && data.hasChild("Email") && data.hasChild("Social Security") && data.hasChild("Phone Number") && data.hasChild("Address")) {
+                            if (data.hasChild("Name") && data.hasChild("Email") && data.hasChild("Social Security")
+                                                            && data.hasChild("Phone Number") && data.hasChild("Address")
+                                                            && data.hasChild("Approved Lines")) {
                                 String name = data.child("Name").getValue().toString();
                                 String email = data.child("Email").getValue().toString();
                                 String customerId = data.getKey();
                                 long social = Long.decode(data.child("Social Security").getValue().toString());
                                 Long ptnNum = Long.decode(data.child("Phone Number").getValue().toString());
                                 String address = data.child("Address").getValue().toString();
+                                int  approvedLines = Integer.decode(data.child("Approved Lines").getValue().toString());
 
                                 //Customers(String name, String email, String address, long phoneNum, long socialSecurity, String customerId)
-                                Customers customer = new Customers(name, email, address, ptnNum, social, customerId);
+                                Customers customer = new Customers(name, email, address, ptnNum, social, customerId, approvedLines);
                                 customerList.add(customer);
                             }
 
